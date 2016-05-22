@@ -56,7 +56,9 @@ namespace Simula {
 
 	private: System::Windows::Forms::Label^  angleLabel;
 	private: System::Windows::Forms::Panel^  panel1;
-	private: System::Windows::Forms::Button^  browseButton;
+	private: System::Windows::Forms::Button^  sendButton;
+	private: System::Windows::Forms::Button^  sendButton2;
+			 Form^ okno = gcnew Form;
 
 			 
 	private:
@@ -79,7 +81,8 @@ namespace Simula {
 			this->InitVeloLabel = (gcnew System::Windows::Forms::Label());
 			this->angleLabel = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->browseButton = (gcnew System::Windows::Forms::Button());
+			this->sendButton = (gcnew System::Windows::Forms::Button());
+			this->sendButton2 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// simulateButton
@@ -153,22 +156,32 @@ namespace Simula {
 			this->panel1->Size = System::Drawing::Size(1000, 600);
 			this->panel1->TabIndex = 9;
 			// 
-			// browseButton
+			// sendButton
 			// 
-			this->browseButton->Location = System::Drawing::Point(46, 301);
-			this->browseButton->Name = L"browseButton";
-			this->browseButton->Size = System::Drawing::Size(115, 39);
-			this->browseButton->TabIndex = 10;
-			this->browseButton->Text = L"Browse";
-			this->browseButton->UseVisualStyleBackColor = true;
-			this->browseButton->Click += gcnew System::EventHandler(this, &MyForm::browseButton_Click);
+			this->sendButton->Location = System::Drawing::Point(46, 301);
+			this->sendButton->Name = L"sendButton";
+			this->sendButton->Size = System::Drawing::Size(115, 39);
+			this->sendButton->TabIndex = 10;
+			this->sendButton->Text = L"Send To Form";
+			this->sendButton->UseVisualStyleBackColor = true;
+			this->sendButton->Click += gcnew System::EventHandler(this, &MyForm::sendButton_Click);
+			//
+			//sendButton2
+			//
+			this->sendButton2->Location = System::Drawing::Point(46, 361);
+			this->sendButton2->Name = L"sendButton2";
+			this->sendButton2->Size = System::Drawing::Size(115, 39);
+			this->sendButton2->TabIndex = 10;
+			this->sendButton2->Text = L"Send Back";
+			this->sendButton2->UseVisualStyleBackColor = true;
+			this->sendButton2->Click += gcnew System::EventHandler(this, &MyForm::sendButton2_Click);
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1254, 648);
-			this->Controls->Add(this->browseButton);
+			this->Controls->Add(this->sendButton);
 			this->Controls->Add(this->panel1);
 			this->Controls->Add(this->angleLabel);
 			this->Controls->Add(this->InitVeloLabel);
@@ -182,24 +195,39 @@ namespace Simula {
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
+
+			
+			
+
 		}
 #pragma endregion
 	
 
 private: System::Void simulateButton_Click(System::Object^  sender, System::EventArgs^  e) {
 	String ^ Angle = angleTextBox->Text;
-	float angled = (float)(Convert::ToDouble(Angle));
+	
 
 	String ^ Velocity = velocityTextBox->Text;
-	float veloted = (float)(Convert::ToDouble(Velocity));
-	double g = 9.8f;
+	
+	if (Angle == "" || Velocity == "")
+	{
+		Angle = "1";
+		Velocity = "1";
+	}
+	else
+	{
+		String ^ Angle = angleTextBox->Text;
+		String ^ Velocity = velocityTextBox->Text;
+		float angled = (float)(Convert::ToDouble(Angle));
+		float veloted = (float)(Convert::ToDouble(Velocity));
+double g = 9.8f;
 #define M_PI 3.14159265358979323846
 
-	double mathPowS = pow(veloted, 2); // kwadrat prêdkoœci pocz¹tkowej
-	double mathTanA = tan(angled * M_PI / 180);// tangens k¹ta
-	double mathCosPowA = pow(cos(angled * M_PI / 180), 2); //kosinus kwadrat k¹ta
-	double Ymax = ((pow((veloted * sin(angled * M_PI / 180)), 2)) / (2 * g)); //wysokoœæ maksymalna
-	double Xmax = (2 * mathPowS * sin(angled * M_PI / 180) * cos(angled * M_PI / 180)) / (g); //zasiêg rzutu
+	double mathPowS = pow(veloted, 2); // kwadrat prÄ™dkoÅ›ci poczÄ…tkowej
+	double mathTanA = tan(angled * M_PI / 180);// tangens kÄ…ta
+	double mathCosPowA = pow(cos(angled * M_PI / 180), 2); //kosinus kwadrat kÄ…ta
+	double Ymax = ((pow((veloted * sin(angled * M_PI / 180)), 2)) / (2 * g)); //wysokoÅ›Ä‡ maksymalna
+	double Xmax = (2 * mathPowS * sin(angled * M_PI / 180) * cos(angled * M_PI / 180)) / (g); //zasiÄ™g rzutu
 	int Xposition = (int)Xmax, Yposition = (int)Ymax;
 	int indexY = (int)((Ymax / 580) + 1);
 	int index = (int)((Xmax / 700) + 1);
@@ -259,10 +287,29 @@ private: System::Void simulateButton_Click(System::Object^  sender, System::Even
 
 	panel1->Update();
 	panel1->Invalidate();
+	}
+	
 }
 
-private: System::Void browseButton_Click(System::Object^  sender, System::EventArgs^  e) {
 
+public: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {
+	
+	okno->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+	okno->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+	okno->ClientSize = System::Drawing::Size(1254, 648);
+	okno->Controls->Add(this->panel1);
+	this->Controls->Add(this->sendButton2);
+	okno->Name = L"PanelForm";
+	okno->Text = L"Simula";
+	okno->ResumeLayout(false);
+	okno->PerformLayout();
+	okno->Show();
+		
 }
+	public: System::Void sendButton2_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		this->Controls->Add(this->panel1);
+		okno->Close();
+	}
 };
 }
